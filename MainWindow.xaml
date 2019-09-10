@@ -1,0 +1,54 @@
+﻿<Window x:Class="_3DHelixToolKitApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:_3DHelixToolKitApp"
+        xmlns:h="http://helix-toolkit.org/wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="850" Width="1050" x:Name="main">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition>
+            </ColumnDefinition>
+            <ColumnDefinition Width="3*">
+            </ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ScrollViewer Grid.RowSpan="2" Grid.Column="0">
+            <ListBox x:Name="tasksList" ItemsSource="{Binding ModelObjs }" SelectedItem="{Binding SelectedModelObj, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True">
+                <ListBox.ItemTemplate>
+                    <DataTemplate x:Name="dataTemplate">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" Margin="10" ></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </ScrollViewer>
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+            <Button Content="LOAD" Margin="10" Width ="100" Height="40" FontSize="30" Command="{Binding LoadModel3D}"></Button>
+            <Button Content="CLEAR" Margin="10" Width="100" Height="40" FontSize="30" Command="{Binding DeleteModel}"></Button>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" DataContext="{Binding SelectedModelObj}">
+                <Label Content="MIN Z"></Label>
+                <Slider x:Name="min_Z" Width="100" VerticalAlignment="Center" Minimum="-25" Maximum="-5" Value="{Binding MinimumSlider,Mode=TwoWay }"></Slider>
+                <Label Content="MAX Z"></Label>
+                <Slider x:Name="max_Z" Width="100" VerticalAlignment="Center"  Minimum="5" Maximum="25" Value="{Binding MaximumSlider, Mode=TwoWay}" ></Slider>
+            </StackPanel>
+            <Button Content="START" Margin="10" Width ="100" Height="40" FontSize="30" Command="{Binding StartMoving}" CommandParameter="{Binding SelectedModelObj}"></Button>
+            <Button Content="STOP" Margin="10" Width="100" Height="40" FontSize="30" Command="{Binding StopMoving}"></Button>
+        </StackPanel>
+        <h:HelixViewport3D x:Name="hVp3D" Grid.Row="0" Grid.Column="1" DataContext="{Binding SelectedModelObj}" CameraRotationMode ="Trackball" ShowFrameRate="True" >
+            <h:DefaultLights/>
+            <ModelVisual3D x:Name="model3d" Content="{Binding ModelGroup}">
+                <ModelVisual3D.Transform>
+                    <TranslateTransform3D x:Name="translate" OffsetZ="{Binding Offset}">
+                    </TranslateTransform3D>
+                </ModelVisual3D.Transform>
+            </ModelVisual3D>
+        </h:HelixViewport3D>
+    </Grid>
+</Window>
